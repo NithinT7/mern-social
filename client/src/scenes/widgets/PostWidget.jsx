@@ -8,6 +8,7 @@ import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
+import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
@@ -25,10 +26,23 @@ const PostWidget = ({
 }) => {
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();
+  const [fullName, setFullName] = useState(name);
+  const [picture, setPicture] = useState(userPicturePath);
+  const [locate, setLocate] = useState(location);
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
+  const user = useSelector((state) => state.user);
   const isLiked = Boolean(likes[loggedInUserId]);
   const likeCount = Object.keys(likes).length;
+
+  useEffect(() => {
+    if (loggedInUserId === postUserId) {
+      setFullName(user.firstName + " " + user.lastName);
+      setPicture(user.picturePath);
+      setLocate(user.location);
+    }
+  }, [user.firstName, user.lastName, user.picturePath, user.location]);
+
 
   const { palette } = useTheme();
   const main = palette.neutral.main;
@@ -51,9 +65,9 @@ const PostWidget = ({
     <WidgetWrapper m="2rem 0">
       <Friend
         friendId={postUserId}
-        name={name}
-        subtitle={location}
-        userPicturePath={userPicturePath}
+        name={fullName}
+        subtitle={locate}
+        userPicturePath={picture}
         addFriend={loggedInUserId !== postUserId ? true : false}
       />
       <Typography color={main} sx={{ mt: "1rem" }}>

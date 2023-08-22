@@ -6,6 +6,7 @@ import {
   useTheme,
   Card,
   CardContent,
+  CircularProgress,
 } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
@@ -19,11 +20,12 @@ const ChatWidget = ({ userId, picturePath }) => {
   const { palette } = useTheme();
   const token = useSelector((state) => state.token);
   const dark = palette.neutral.dark;
-  const [chatList, setChatList] = useState(null);
+  const [chatList, setChatList] = useState([]);
   const dispatch = useDispatch();
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
+    const response = await fetch(`${API_URL}/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -31,29 +33,23 @@ const ChatWidget = ({ userId, picturePath }) => {
     setUser(data);
   };
   const getFriends = async () => {
-    const response = await fetch(
-      `http://localhost:3001/users/${userId}/friends`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const response = await fetch(`${API_URL}/users/${userId}/friends`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
     const data = await response.json();
     console.log(data);
     setFriends(data.formattedFriends);
   };
 
   const openChat = async (friendId) => {
-    const response = await fetch(
-        `http://localhost:3001/users/${userId}/${friendId}`,
-        {
-            method: "GET",
-            headers: { Authorization: `Bearer ${token}` },
-        }
-    );
+    const response = await fetch(`${API_URL}/users/${userId}/${friendId}`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
     const data = await response.json();
     if (data) {
-        dispatch(setCurrentChat({chat: data}));
+      dispatch(setCurrentChat({ chat: data }));
     }
     console.log(data);
   };
@@ -77,6 +73,7 @@ const ChatWidget = ({ userId, picturePath }) => {
               backgroundColor: palette.background.alt,
             },
             width: "100%",
+            marginTop: "0.5rem",
           }}
           onClick={() => openChat(friend._id)}
         >
@@ -103,7 +100,7 @@ const ChatWidget = ({ userId, picturePath }) => {
   }
 
   return (
-    <WidgetWrapper>
+    <WidgetWrapper height="100%">
       {/* FIRST ROW */}
       <FlexBetween gap="0.5rem" pb="1.1rem">
         <FlexBetween gap="1rem">
@@ -116,9 +113,19 @@ const ChatWidget = ({ userId, picturePath }) => {
       </FlexBetween>
 
       <Divider />
-      <FlexBetween gap="0.5rem" pt="1.1rem">
-        <Box width="100%">{chatList}</Box>
-      </FlexBetween>
+      {chatList.length === 0 ? (
+        <FlexBetween maxHeight="90%" gap="0.5rem" top="0">
+          <Box width="100%" display={"flex"} justifyContent="center">
+            <CircularProgress />
+          </Box>
+        </FlexBetween>
+      ) : (
+        <FlexBetween maxHeight="90%" gap="0.5rem" top="0" overflow="auto">
+          <Box width="100%" marginTop="auto">
+            {chatList}
+          </Box>
+        </FlexBetween>
+      )}
     </WidgetWrapper>
   );
 };

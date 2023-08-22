@@ -15,6 +15,8 @@ const register = async (req, res) => {
       occupation,
       chats,
     } = req.body;
+    const userExists = await User.findOne({ email });
+    if (userExists) return res.status(400).json({ error: "User already exists" });
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     const newUser = new User({
@@ -39,7 +41,6 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     try {
         const {email, password} = req.body;
-        console.log(email);
         const user = await User.findOne({email});
         if (!user) return res.status(404).json({error: "User not found"});
         const validPassword = await bcrypt.compare(password, user.password);

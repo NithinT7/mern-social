@@ -10,10 +10,12 @@ const FriendListWidget = ({ userId }) => {
   const { palette } = useTheme();
   const token = useSelector((state) => state.token);
   const friends = useSelector((state) => state.user.friends);
+  const user = useSelector((state) => state.user);
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
 
   const getFriends = async () => {
     const response = await fetch(
-      `http://localhost:3001/users/${userId}/friends`,
+      `${API_URL}/users/${userId}/friends`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
@@ -25,7 +27,7 @@ const FriendListWidget = ({ userId }) => {
 
   useEffect(() => {
     getFriends();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [user.firstName, user.lastName, user.occupation, user.location, user.picturePath]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <WidgetWrapper>

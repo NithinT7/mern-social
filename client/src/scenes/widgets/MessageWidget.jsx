@@ -19,13 +19,11 @@ const MessageWidget = () => {
   const [socket, setSocket] = useState(null);
   const [friend, setFriend] = useState(null);
 
- 
-
   useEffect(() => {
     const newSocket = io("http://localhost:3001");
     setSocket(newSocket);
     console.log("socket connected");
-    newSocket.on("receive_message", ({receiver, ...rest}) => {
+    newSocket.on("receive_message", ({ receiver, ...rest }) => {
       if (receiver === user._id) {
         setMessages((prev) => [...prev, rest]);
       }
@@ -37,12 +35,11 @@ const MessageWidget = () => {
     };
   }, [user._id]);
 
-
-
   useEffect(() => {
-    setChat(currentChat);
-    setMessages(currentChat[0].messages);
-
+    if (currentChat) {
+      setChat(currentChat);
+      setMessages(currentChat[0].messages);
+    }
   }, [currentChat]);
 
   useEffect(() => {
@@ -193,7 +190,7 @@ const MessageWidget = () => {
             value={inputValue}
           />
           <Button variant="contained" color="primary" type="submit">
-            <SendIcon/>
+            <SendIcon />
           </Button>
         </Box>
       </form>

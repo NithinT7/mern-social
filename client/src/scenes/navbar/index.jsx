@@ -24,6 +24,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout, setChatOpen} from "state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
+import UserImage from "components/UserImage";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -31,6 +33,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+
+  const { logout } = useAuth0();
 
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
@@ -40,6 +44,12 @@ const Navbar = () => {
   const alt = theme.palette.background.alt;
 
   const fullName = `${user.firstName} ${user.lastName}`;
+
+  const handleLogout = () => {
+    logout();
+    dispatch(setLogout());
+  };
+    
 
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
@@ -83,7 +93,7 @@ const Navbar = () => {
               <LightMode sx={{ color: dark, fontSize: "25px" }} />
             )}
           </IconButton>
-          <Message sx={{ fontSize: "25px" }} onClick={() => navigate("/chat")}/>
+          <Message sx={{ fontSize: "25px" }} cursor="pointer" onClick={() => navigate("/chat")}/>
           <Notifications sx={{ fontSize: "25px" }} />
           <Help sx={{ fontSize: "25px" }} />
           <FormControl variant="standard" value={fullName}>
@@ -107,7 +117,7 @@ const Navbar = () => {
               <MenuItem value={fullName}>
                 <Typography>{fullName}</Typography>
               </MenuItem>
-              <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
+              <MenuItem onClick={handleLogout}>Log Out</MenuItem>
             </Select>
           </FormControl>
         </FlexBetween>
@@ -161,6 +171,7 @@ const Navbar = () => {
             <Message sx={{ fontSize: "25px" }} />
             <Notifications sx={{ fontSize: "25px" }} />
             <Help sx={{ fontSize: "25px" }} />
+            <UserImage image={user.picturePath} />
             <FormControl variant="standard" value={fullName}>
               <Select
                 value={fullName}

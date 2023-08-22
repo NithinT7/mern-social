@@ -24,12 +24,15 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
+import { useEffect } from "react";
 
 const MyPostWidget = ({ picturePath }) => {
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
   const [post, setPost] = useState("");
+  const user = useSelector((state) => state.user);
+  const [picture, setPicture] = useState(picturePath);
   const { palette } = useTheme();
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
@@ -57,10 +60,16 @@ const MyPostWidget = ({ picturePath }) => {
     setPost("");
   };
 
+  useEffect(() => {
+    if (user.picturePath) {
+      setPicture(user.picturePath);
+    }
+  }, [user.picturePath]);
+
   return (
     <WidgetWrapper>
       <FlexBetween gap="1.5rem">
-        <UserImage image={picturePath} />
+        <UserImage image={picture} />
         <InputBase
           placeholder="What's on your mind..."
           onChange={(e) => setPost(e.target.value)}

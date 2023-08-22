@@ -11,6 +11,30 @@ const getUser = async (req, res) => {
   }
 };
 
+const editUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { firstName, lastName, occupation, location, picture} = req.body;
+    console.log(lastName);
+    const user = await User.findByIdAndUpdate(
+      id,
+      {
+        firstName: firstName,
+        lastName: lastName,
+        occupation: occupation,
+        location: location,
+        picturePath: picture,
+      },
+      { new: true }
+    );
+    await user.save();
+    console.log(user.lastName);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+};
+
 const getUserFriends = async (req, res) => {
   try {
     const { id } = req.params;
@@ -171,4 +195,5 @@ module.exports = {
   addRemoveFriend,
   getChat,
   sendMessage,
+  editUser,
 };
