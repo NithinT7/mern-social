@@ -47,7 +47,7 @@ const EditForm = (open, setOpen) => {
     formData.append("occupation", values.occupation);
     formData.append("picture", values.picture);
 
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
+    const response = await fetch(`${API_URL}1/users/${userId}`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,

@@ -45,9 +45,10 @@ const UserWidget = ({ userId, picturePath }) => {
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
+    const response = await fetch(`${API_URL}/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -80,7 +81,7 @@ const UserWidget = ({ userId, picturePath }) => {
 
     try {
       const response = await axios.post(
-        `http://localhost:3001/users/${userId}`,
+        `${API_URL}/users/${userId}`,
         {
           firstName: values.firstName,
           lastName: values.lastName,

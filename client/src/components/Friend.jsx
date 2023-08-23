@@ -12,7 +12,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, addFriend }) => {
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
   const friends = useSelector((state) => state.user.friends);
-  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const { palette } = useTheme();
   const primaryLight = palette.primary.light;

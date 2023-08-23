@@ -18,9 +18,10 @@ const MessageWidget = () => {
   const scrollRef = React.useRef(null);
   const [socket, setSocket] = useState(null);
   const [friend, setFriend] = useState(null);
+  const API_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    const newSocket = io("http://localhost:3001");
+    const newSocket = io(`${API_URL}`);
     setSocket(newSocket);
     console.log("socket connected");
     newSocket.on("receive_message", ({ receiver, ...rest }) => {
@@ -54,7 +55,7 @@ const MessageWidget = () => {
       const friendId = chat[0].users.find((item) => item !== user._id);
       const getFriend = async () => {
         const response = await axios.get(
-          `http://localhost:3001/users/${friendId}`,
+          `${API_URL}/users/${friendId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -82,7 +83,7 @@ const MessageWidget = () => {
 
       const sendMessage = async () => {
         const response = await axios.post(
-          `http://localhost:3001/users/${userId}/${friendId}`,
+          `${API_URL}/users/${userId}/${friendId}`,
           {
             message: inputValue,
           },

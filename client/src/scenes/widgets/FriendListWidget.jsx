@@ -11,7 +11,7 @@ const FriendListWidget = ({ userId }) => {
   const token = useSelector((state) => state.token);
   const friends = useSelector((state) => state.user.friends);
   const user = useSelector((state) => state.user);
-  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const getFriends = async () => {
     const response = await fetch(

@@ -17,6 +17,7 @@ const LoginAuth = () => {
         getIdTokenClaims,
         isLoading
     } = useAuth0();
+    const API_URL = process.env.REACT_APP_API_URL;
 
     const handleLogin = async () => {
         try{
@@ -35,7 +36,7 @@ const LoginAuth = () => {
                 
                 if (isGoogleUser) {
                     try {
-                        const response = await axios.post("http://localhost:3001/auth/register", {
+                        const response = await axios.post(`${API_URL}/auth/register`, {
                             firstName: user.given_name,
                             lastName: user.family_name,
                             email: user.email,
@@ -45,7 +46,7 @@ const LoginAuth = () => {
                             occupation: "",
                         });
 
-                        const responseLogin = await axios.post("http://localhost:3001/auth/login", {
+                        const responseLogin = await axios.post(`${API_URL}/auth/login`, {
                             email: user.email,
                             password: "12345",
                         });
@@ -55,7 +56,7 @@ const LoginAuth = () => {
                         
                     } catch (error) {
                         if (error.response && error.response.data.error === "User already exists") {
-                            const responseLogin = await axios.post("http://localhost:3001/auth/login", {
+                            const responseLogin = await axios.post(`${API_URL}/auth/login`, {
                                 email: user.email,
                                 password: "12345",
                             });
