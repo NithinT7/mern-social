@@ -24,7 +24,7 @@ app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 +app.use(cors({
-  origin: ["https://mern-social-client.vercel.app/"],
+  origin: ["https://mern-social-client.vercel.app"],
   methods: ["GET", "POST", "PATCH", "DELETE"],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -33,7 +33,7 @@ app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
-    origin: [`https://mern-social-client.vercel.app/`],
+    origin: [`https://mern-social-client.vercel.app`],
   },
 });
 
